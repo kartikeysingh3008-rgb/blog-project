@@ -5,7 +5,11 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_wtf import FlaskForm
+from dotenv import load_dotenv
 from wtforms import StringField, SubmitField
+import psycopg
+import gunicorn
+import os 
 from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditor, CKEditorField
 from datetime import date
@@ -17,9 +21,9 @@ from flask import abort
 
 URL = "https://api.npoint.io/674f5423f73deab1e9a7"
 
-
+load_dotenv()
 app = Flask(__name__)
-app.config["SECRET_KEY"] = 'AnimeIsNotCartoon'
+app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
@@ -28,7 +32,7 @@ Bootstrap5(app)
 
 class Base(DeclarativeBase):
     pass
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI','sqlite:///posts.db')
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
