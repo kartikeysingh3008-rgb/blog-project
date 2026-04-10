@@ -206,9 +206,10 @@ def login():
         result = db.session.execute(db.select(User).where(User.email==email)).scalar()
         if not result:
             flash("User Does Not Exists!!")
-            return render_template("login.html")
+            return render_template("login.html", form=form)
         elif not check_password_hash(result.password, password):
             flash("Wrong Password, Try Again")
+            return render_template("login.html", form=form)
         else:
             login_user(result)
             return redirect(url_for("app_run"))
